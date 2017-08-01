@@ -1,0 +1,17 @@
+Welcome, this is trs80m1-mltl, a machine language "tape linker" for the
+TRS-80 Model I personal microcomputer.
+
+This utility takes a raw binary file, and packs it into a format which
+Level II machines can load into memory and execute using the command `SYSTEM'.
+
+The output file format is CAS, which can easily be used by most emulators, and
+with the use of a conversion utility, can be recorded onto a real tape as well,
+for use with real hardware.
+
+The purpose of this tool is to allow the development of TRS-80 Model I tape
+software in a modern environment.  In particular, it's been tested using the
+ZASM assembler, which you can find here:
+
+    http://k1.spdns.de/Develop/Projects/zasm/Distributions/
+
+You can find example programs in the `examples' directory of the project.
