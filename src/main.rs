@@ -217,6 +217,35 @@ fn main() {
                 eprintln!("{}: The specified input file `{}' is not a file.", progname, new_path.display());
                 process::exit(1);
             }
+            match new_path.extension() {
+                Some(extension_os) => {
+                    let extension = extension_os.to_string_lossy().into_owned();
+                    let cmp_ext = extension.to_uppercase();
+
+                    if cmp_ext == "ASM" || cmp_ext == "C"   ||
+                       cmp_ext == "CXX" || cmp_ext == "CPP" ||
+                       cmp_ext == "C++" || cmp_ext == "F"   ||
+                       cmp_ext == "F66" || cmp_ext == "F77" ||
+                       cmp_ext == "F90" || cmp_ext == "F95" {
+
+                        eprintln!("{}: The specified input file `{}' has a `{}' extension, and is most likely a source code file.  Rename it if you _really_ want to pack it into a machine language cassette image.", progname, new_path.display(), extension);
+                        process::exit(1);
+                    }
+                    if cmp_ext == "CAS" || cmp_ext == "CPT" {
+                        eprintln!("{}: The specified input file `{}' has a `{}' extension, and is most likely already a cassette image.  Rename it if you _really_ want to pack it into a machine language cassette image.", progname, new_path.display(), extension);
+                        process::exit(1);
+                    }
+                    if cmp_ext == "LST" || cmp_ext == "TXT" ||
+                       cmp_ext == "INI" || cmp_ext == "CONF" {
+                        eprintln!("{}: The specified input file `{}' has a `{}' extension, and is most likely a plain text file.  Rename it if you _really_ want to pack it into a machine language cassette image.", progname, new_path.display(), extension);
+                        process::exit(1);
+                    }
+                    if cmp_ext != "" && cmp_ext != "BIN" && cmp_ext != "ROM" {
+                        eprintln!("{}: Warning: The specified input file `{}' has a `{}' extension (`rom' or `bin' expected).", progname, new_path.display(), extension);
+                    }
+                },
+                None => { },
+            }
 
             new_path
         },
