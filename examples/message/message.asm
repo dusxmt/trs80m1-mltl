@@ -10,36 +10,36 @@
 ;
 ; To assemble and link this program:
 ;
-;    $ zasm message.asm
-;    $ trs80m1-mltl -i message.bin -b 0x6000 -s 0x6000
+;    $ zasm -w message.asm
+;    $ trs80m1-mltl -i message.bin -b <base address> -s <entry point>
 ;
 ; Which will yield a message.cas file, which you can then use with your
 ; emulator of choice.
+;
+; You can find the base and entry point addresses in the `global symbols'
+; part of the message.lst file, once the assembly is complete it.
+;
+; `BASE' is the base address, and `start' is the entry point.
+;
+; The command-line options expect hexadecimal input, with or without an
+; optional 0x prefix.
 ; 
 
 #target		bin
-#code	 	CODE,	0x6000
+#code	 	BASE,	0x4A00
 
 
 ; Location of the video memory:
 video_mem	equ	0x3C00
 
-; Copy the new screen content into video memory:
-		ld	hl, video_mem
-		ld	de, message
-		ld	b, 16		; Outer loop iteration count.
-outer_loop:	ld	c, 64		; Inner loop iteration count.
-inner_loop:	ld	a, (de)
-		ld	(hl), a
-		inc	de
-		inc	hl
-		dec	c
-		jp	nz, inner_loop	; Loop until we underflow.
-		dec	b
-		jp	nz, outer_loop	; Same for the outer loop.
-
-stuck:		jp	stuck
-
 
 ; The message to display on the screen:
 message:	incbin "screen_content.dat"
+
+
+; Copy the message onto the screen:
+start:		ld	hl, message
+		ld	de, video_mem
+		ld	bc, 16 * 64
+		ldir
+		halt
